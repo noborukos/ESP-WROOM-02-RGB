@@ -22,7 +22,7 @@ struct CONFIG {
   char STpassword[32];
 };
 CONFIG STbuf;
-const char SThost[] = "ESP8266sd.local";
+const char SThost[] = "ESP8266sd";
 
 void setting_AP_data( void )
 {
@@ -38,6 +38,10 @@ void setting_AP_data( void )
 
   while( 1 )
   {
+    DBG_OUTPUT_PORT.println();
+    DBG_OUTPUT_PORT.println();
+    DBG_OUTPUT_PORT.println();
+    DBG_OUTPUT_PORT.println();
     DBG_OUTPUT_PORT.println();
 
     DBG_OUTPUT_PORT.print("Input AP SSID : ");
@@ -69,7 +73,11 @@ void StMode_init( void )
 {
   EEPROM.begin(128);
   EEPROM.get<CONFIG>(0, STbuf);
-  if( ( STbuf.flag[0] != 0x55 ) || ( STbuf.flag[1] != 0xaa ) ){ setting_AP_data(); }
+  if( ( STbuf.flag[0] != 0x55 ) || ( STbuf.flag[1] != 0xaa ) )
+  {
+    delay(3000);
+    setting_AP_data();
+  }
   EEPROM.put<CONFIG>(0, STbuf);
   EEPROM.commit();
   
