@@ -19,12 +19,16 @@ SDメモリに保存<br>
 制御ページのHTMLデータはSDメモリに格納<br>
 </p>
 <p>
+</p>
+<p>
 試作回路画像<br>
 <img src="./image/board1.png" width="40%" hight="40%" ><br>
 </p>
 <p>
 ブラウザ画面<br>
 <img src="./image/browser.png" width="40%" hight="40%" ><br>
+</p>
+<p>
 点灯画像<br>
 <img src="./image/board2.png" width="40%" hight="40%" ><br>
 </p>
