@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+ <title>ESP8266 RGB LED Control</title>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <script type="text/javascript" src="jquery-m.js"></script>
+ <script type="text/javascript" src="farbtast.js"></script>
+ <link rel="stylesheet" href="farbtast.css" type="text/css" />
+  <style type="text/css" media="screen">
+  .srv-res {
+	  font-size: 80%;
+  }
+  #srv-res-text {
+	  background-color:gray;
+	  width:  300px;
+	  height: 20px;
+  }
+  </style>
+
+ <script type="text/javascript" charset="utf-8">
+  var init_color = '#123456';
+  var handleContent;
+  var req;
+  var TextNode;
+  req = new XMLHttpRequest();
+
+  // color picker 
+  $(document).ready( function() {
+    $('#demo').hide();
+    $.farbtastic('#picker')
+    .setColor(init_color)
+    .linkTo( function(color){
+    	$('#color').val(color);
+    	change_color(color);
+    });
+    $('#color').val(init_color);
+  } );
+
+  // color change
+  function change_color(color){
+  	proc_req(color);
+  };
+    
+  // LED ON/OFF
+  function led( sw ){
+  	if(sw != 0 ){
+  	 proc_req( "on" );
+  	}
+  	else {
+  	 proc_req("off" );
+  	}
+  };
+    
+  // XMLHttpRequest処理
+  function proc_req(s){
+  	var cmd_str;
+	if( ( s =="on") || ( s =="off" ) ){
+  	  cmd_str = "/do?LED=" + s;
+	}
+	else {
+  	  cmd_str = "/do?LED=" + col2hex(s);
+	}
+    req.onreadystatechange = proc_readdata;	//レスポンス
+    req.open( "GET", cmd_str, true );
+    req.send("");
+    console.log( cmd_str );
+  };
+  function proc_readdata(){
+    if(req.readyState == 4){
+      var text = document.createTextNode(req.responseText);
+      handleContent.removeChild(TextNode);
+      TextNode = handleContent.appendChild(text,TextNode);
+    }
+  }
+
+  // 文字列先頭の"#"を"0x"に置き換え
+  function col2hex( s ) {
+    var s1 = s.replace("#","0x");
+    return s1;	
+  }
+
+  // ページ読み込み時
+  window.onload = function () {
+ 	req = new XMLHttpRequest();
+	//サーバーのレスポンス表示エリア
+	handleContent = document.getElementById('srv-res-text');
+	var text = document.createTextNode('');
+	TextNode = handleContent.appendChild(text);
+  };
+
+ </script>
+
+
+
+</head>
+<body>
+<h1>ESP8266 RGB LED Control</h1>
+
+<div id="demo" style="color: red; font-size: 1.4em">jQuery.js is not present. You must install jQuery in this folder for the demo to work.</div>
+<form action="" style="width: 400px;" name="form_input" >
+	<div id="picker"></div>	
+	<div class="form-item"><label for="color">Color:</label><input type="text" id="color" name="color" value="#123456" /></div>
+</form>
+<br />
+<br />
+<form>
+<input type="button" value="LED ON " onClick="led(1)" style="font-size:20px;"> 
+<input type="button" value="LED OFF" onClick="led(0)" style="font-size:20px;">
+</form>
+
+<br>
+<!-- サーバーのレスポンス表示 --->
+<div class="srv-res">
+Server response<br>
+<div id ="srv-res-text" > </div>
+</div>
+<br>
+
+<br>More info on <a href="http://www.acko.net/dev/farbtastic">Acko.net</a>.
+<br>Created by <a href="http://www.acko.net/">Steven Wittens</a>.
+</body>
+
+</html>
